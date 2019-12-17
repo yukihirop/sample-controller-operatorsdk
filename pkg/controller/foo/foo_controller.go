@@ -5,6 +5,7 @@ import (
 
 	samplecontrollerv1alpha1 "github.com/yukihirop/sample-controller-operatorsdk/pkg/apis/samplecontroller/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -82,6 +83,32 @@ func (r *ReconcileFoo) Reconcile(request reconcile.Request) (reconcile.Result, e
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Reconciling Foo")
 	ctx := context.Background()
+
+	/*
+		#### 1: Load the Foo by name
+		We'll fetch the Foo using our client.
+		All client methods take a context (to allow for cancellation) as
+		their first argument, and the object
+		in question as their last.
+		Get is a bit special, in that it takes a
+		[`NamespacedName`](https://godoc.org/sigs.k8s.io/controller-runtime/pkg/client#ObjectKey)
+		as the middle argument (most don't have a middle argument, as we'll see below).
+
+		Many client methods also take variadic options at the end.
+	*/
+	foo := &samplecontrollerv1alpha1.Foo{}
+	if err := r.client.Get(ctx, request.NamespacedName, foo); err != nil {
+		if errors.IsNotFound(err) {
+			// Request object not found, could have been deleted after reconcile request.
+			// Owned objects are automatically garbage collected. FOr additional cleanup logic use finalizers.
+			// Return and don't requeue
+			reqLogger.Info("Foo not found. Ignore not found")
+			return reconcile.Result{}, nil
+		}
+		reqLogger.Error(err, "failed to get Foo")
+		// Error reading the object - requeue the request.
+		return reconcile.Result{}, err
+	}
 
 	return reconcile.Result{}, nil
 }

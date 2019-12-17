@@ -8,6 +8,7 @@ import (
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // FooSpec defines the desired state of Foo
+// +k8s:openapi-gen=true
 type FooSpec struct {
 	// the name of deployment which is owned by foo
 	// +kubebuilder:validation:Format=string
@@ -19,6 +20,7 @@ type FooSpec struct {
 }
 
 // FooStatus defines the observed state of Foo
+// +k8s:openapi-gen=true
 type FooStatus struct {
 	// this is equal deployment.status.availableReplicas
 	AvailableReplicas int32 `json:"availableReplicas"`
@@ -27,6 +29,7 @@ type FooStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Foo is the Schema for the foos API
+// +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=foos,scope=Namespaced
 type Foo struct {

@@ -166,18 +166,18 @@ func (r *ReconcileFoo) Reconcile(request reconcile.Request) (reconcile.Result, e
 	}
 
 	/*
-		#### 4: Update deployment spec if it isn't desire state.
+		### 4: Update deployment spec if it isn't desire state.
 		We compare foo.spec.replicas and deployment.spec.replicas.
 		If it doesn't correct, we'll use Update method to reconcile deployment state.
 	*/
 
 	// compare foo.spec.replicas and deployment.spec.replicas
 	if foo.Spec.Replicas != nil && *foo.Spec.Replicas != *deployment.Spec.Replicas {
-		reqLogger.Info("unmatch spec", "foo.spec.replicas", foo.Spec.Replicas, "deployment.spec.replicas", deployment.Spec.Replicas)
+		reqLogger.Info("unmatch spec","foo.spec.replicas", foo.Spec.Replicas, "deployment.spec.replicas", deployment.Spec.Replicas)
 		reqLogger.Info("Deployment replicas is not equal Foo replicas. reconcile this...")
 		// Update deployment spec
 		if err := r.client.Update(ctx, newDeployment(foo)); err != nil {
-			reqLogger.Error(err, "failed to get Deployment for Foo resource")
+			reqLogger.Error(err, "failed to update Deployment for Foo resource")
 			// Error updating the object - requeue the request.
 			return reconcile.Result{}, err
 		}
@@ -268,7 +268,7 @@ func newDeployment(foo *samplecontrollerv1alpha1.Foo) *appsv1.Deployment {
 			Name:      foo.Spec.DeploymentName,
 			Namespace: foo.Namespace,
 			Labels:    labels,
-			OwnerRefeerences: []metav1.OwnerReference{
+			OwnerReferences: []metav1.OwnerReference{
 				*metav1.NewControllerRef(foo, samplecontrollerv1alpha1.SchemeGroupVersion.WithKind("Foo")),
 			},
 		},

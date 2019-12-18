@@ -31,7 +31,6 @@ type FooStatus struct {
 // Foo is the Schema for the foos API
 // +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:path=foos,scope=Namespaced
 type Foo struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

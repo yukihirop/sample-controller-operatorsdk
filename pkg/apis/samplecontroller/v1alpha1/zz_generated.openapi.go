@@ -22,18 +22,17 @@ func schema_pkg_apis_samplecontroller_v1alpha1_Foo(ref common.ReferenceCallback)
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "Foo is the Schema for the foos API",
-				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"apiVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -66,7 +65,6 @@ func schema_pkg_apis_samplecontroller_v1alpha1_FooSpec(ref common.ReferenceCallb
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "FooSpec defines the desired state of Foo",
-				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"deploymentName": {
 						SchemaProps: spec.SchemaProps{
@@ -86,6 +84,7 @@ func schema_pkg_apis_samplecontroller_v1alpha1_FooSpec(ref common.ReferenceCallb
 				Required: []string{"deploymentName", "replicas"},
 			},
 		},
+		Dependencies: []string{},
 	}
 }
 
@@ -94,7 +93,6 @@ func schema_pkg_apis_samplecontroller_v1alpha1_FooStatus(ref common.ReferenceCal
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "FooStatus defines the observed state of Foo",
-				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"availableReplicas": {
 						SchemaProps: spec.SchemaProps{
@@ -107,5 +105,6 @@ func schema_pkg_apis_samplecontroller_v1alpha1_FooStatus(ref common.ReferenceCal
 				Required: []string{"availableReplicas"},
 			},
 		},
+		Dependencies: []string{},
 	}
 }

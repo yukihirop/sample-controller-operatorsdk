@@ -137,7 +137,7 @@ func (r *ReconcileFoo) Reconcile(request reconcile.Request) (reconcile.Result, e
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      deploymentName,
 			Namespace: request.Namespace,
-		}
+		},
 	}
 
 	// create deployment which has deploymentName and replicas by newDeployment method if it doesn't exist
@@ -161,6 +161,27 @@ func (r *ReconcileFoo) Reconcile(request reconcile.Request) (reconcile.Result, e
 		reqLogger.Error(err, "failed to get Deployment for Foo resource")
 		// Error reading the object - requeue the request.
 		return reconcile.Result{}, err
+	}
+
+	/*
+		#### 4: Update deployment spec if it isn't desire state.
+		We compare foo.spec.replicas and deployment.spec.replicas.
+		If it doesn't correct, we'll use Update method to reconcile deployment state.
+	*/
+
+	// compare foo.spec.replicas and deployment.spec.replicas
+	if foo.Spec.Replicas != nil && *foo.Spec.Replicas != *deployment.Spec.Replicas {
+		reqLogger.Info("unmatch spec", "foo.spec.replicas", foo.Spec.Replicas, "deployment.spec.replicas", deployment.Spec.Replicas)
+		reqLogger.Info("Deployment replicas is not equal Foo replicas. reconcile this...")
+		// Update deployment spec
+		if err := r.client.Update(ctx, newDeployment(foo)); err != nil {
+			reqLogger.Error(err, "failed to get Deployment for Foo resource")
+			// Error updating the object - requeue the request.
+			return reconcile.Result{}, err
+		}
+
+		reqLogger.Info("updated Deployment spec for Foo")
+		return reconcile.Result{}, nil
 	}
 
 	return reconcile.Result{}, nil
